@@ -1,0 +1,24 @@
+{
+  "name": "greened-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:server dev:client",
+    "dev:server": "npm --workspace server run dev",
+    "dev:client": "npm --workspace client run dev",
+    "seed": "npm --workspace server run prisma:seed",
+    "test": "npm --workspace server test",
+    "build": "npm --workspace client run build",
+    "start": "npm --workspace server start",
+    "pdf": "node scripts/generatePortfolioPdf.js"
+  },
+  "dependencies": {
+    "pdfkit": "^0.13.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
+
