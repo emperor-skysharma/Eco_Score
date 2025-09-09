@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  role     Role     @default(STUDENT)
+  points   Int      @default(0)
+  badges   Badge[]
+  submissions Submission[]
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model Quiz {
+  id        Int        @id @default(autoincrement())
+  title     String
+  questions Question[]
+}
+
+model Question {
+  id       Int      @id @default(autoincrement())
+  prompt   String
+  answer   String
+  quizId   Int
+  quiz     Quiz     @relation(fields: [quizId], references: [id])
+}
+
+model Challenge {
+  id      Int      @id @default(autoincrement())
+  title   String
+  description String
+  points  Int      @default(10)
+  submissions Submission[]
+}
+
+model Submission {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
+  challengeId  Int
+  challenge    Challenge @relation(fields: [challengeId], references: [id])
+  evidencePath String
+  status       SubmissionStatus @default(PENDING)
+  createdAt    DateTime @default(now())
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Badge {
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
